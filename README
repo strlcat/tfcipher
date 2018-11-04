@@ -1,0 +1,240 @@
+Threefish & Skein complete implementation - 256, 512 and 1024 bits.
+
+WHAT IT IS
+
+This is basic, but fast and conforming implementation of Threefish
+block cipher and Skein hash function, with variable size output.
+
+It supports all bit widths that are defined by Threefish: 256, 512 and 1024 bits.
+
+It is endian independent, this means that it can work on both big and little
+endian machines equally.
+
+The implementation also includes code for operating Threefish in CTR, ECB, CBC, XTS and OCB
+modes of operation, as well as OFB like STREAM mode API which turns it into stream cipher.
+There is also Threefish based PRNG, CTR modes API to ease adjusting counter and some test programs.
+
+WHAT IT IS NOT
+
+It is not an encryption program, application or cryptographic library like OpenSSL.
+If you need one, take a look at the author's tfcrypt project
+(look at one which has this implementation as it's base).
+
+DESIGN GOALS
+
+Unlike my previous "tf1024" implementation of Skein and Threefish, this one seeks for these goals:
+
+- Implement the whole set of bit widths: 256, 512 and 1024 bits,
+- Make the code alot easier to read: group same operations with macros, and format it nicely,
+- Care about portability (although tf1024 had it done right too),
+- Split the implementation into separate TUs, so that only necessary things maybe taken into
+  the project that needs a Threefish and/or Skein implementation,
+- Allow for easy extension if needed (more modes of operations for example),
+- A very easy test place to try out new symmetric cryptography ideas.
+
+I think I achieved all goals I objected.
+
+OVERVIEW
+
+tfdef.h, tfcore.h, tfenc.c, tfdec.c:
+	Threefish core files which implement Threefish
+	cipher itself in it's three bit width versions: 256, 512 and 1024 bits.
+
+skein.h, skein.c:
+	Skein hash function core files which implement Skein ontop of Threefish.
+
+tfblk.c:
+	Single block endian independent encryption routines.
+
+tfctr.c:
+	Counter (CTR) mode for Threefish, capable of encrypting an arbitrary length message.
+
+tfctrapi.c:
+	Counter adjustment for CTR and CTR capable modes of operation.
+
+tfecb.c:
+	ECB mode of operation.
+
+tfcbc.c:
+	CBC mode of operation.
+
+tfxts.c:
+	XTS (XEX with cipher text stealing) mode of operation, which is adjusted to
+	256, 512 and 1024 bits block size (see IRR_POLY_CONST define).
+	This implementation takes two keys: one encryption key and one XTS key.
+
+tfocb.c:
+	Philip's Rogaway OCB mode of operation adapted for Threefish.
+
+tfe.h, tfe.c:
+	TFE is a Threefish keystream generator. While CTR mode turns block cipher
+	into stream cipher already, it is not adapted in the way to generate a truly
+	"ondemand mode" stream, i.e., if you request bytes not round to block size.
+	This API is specially designed that to provide a truly "stream" experience.
+
+	For example, requesting from it 167, 76 and 89 bytes, then resetting it and
+	starting over with same settings, then requesting 121, 101 and then 110 bytes
+	again will yield the same 332 bytes of keystream which is to be XORed with your plaintext.
+
+	To use it with same key you should provide an IV of Threefish block size length.
+	Without providing an IV, a zero IV is used. You should already know that reusing
+	same key and IV for two different messages will compromise their contents because
+	XOR of them will yield the clear, not encrypted difference between two.
+
+tfprng.h, tfprng.c:
+	Threefish Pseudo Random Number Generator which works ontop of TFE described above.
+	There are functions to seed it from single 64 bit integer seed or from keyed seed
+	which is equal to Threefish key size. The Threefish is considered strong enough
+	so there are functions to generate random integers as well as to generate random buffers
+	of arbitrary length. TFE as an engine guarantees that no random bit is lost.
+
+tfstream.c:
+	An OFB mode of operation, which uses TFE as it's backend. The XOR is done by using
+	machine word size for speed improvement. It accepts TFE context as it's argument.
+
+tfblktst.c:
+	A test program to see the avalanche effect of Threefish as well as to see that
+	it works correctly (encrypts and decrypts the plaintext with a key).
+	It accepts arguments: argv[1] is a key which is copied directly into a key buffer,
+	argv[2] is a plaintext to be encrypted, and argv[3] is a decryption key for a
+	different (or not) key test.
+
+tfcrypt.c:
+	A minimum test program which encrypts a file using XTS mode. The sector size for
+	XTS mode is set to 512 bytes, so it could be slower than, for example, CTR mode.
+	With -e/-d argument it reads key as is, from file, as a "raw" key, while with
+	-we/-wd argument it hashes an arbitrary long key data into a Skein hash, which
+	is then used as a key. No attempts are made to further harden this hash however.
+	You should use this program only to test Threefish and Skein.
+
+tfecrypt.c:
+	A version of tfcrypt.c above which uses TFE and tfstream as it's backend. It always
+	hashes key data using Skein unlike tfcrypt.c, which offers loading a "raw" key.
+
+skeinhash.c:
+	A Skein hash program. Reads the file and hashes it. Optional -b argument may specify
+	resulting hash bit width, but no more than maximum block size bit width.
+
+tfrand.c:
+	Generates random data using CTR mode of operation. For initial seed it reads
+	random data from /dev/urandom file. An optional argument specifies the number of
+	bytes to be generated (accepts single multiplication prefixes, for example, "12M"
+	for "12 megabytes").
+
+tferand.c:
+	Generates random data using TFE engine. As tfrand.c, uses /dev/urandom for initial seed.
+	Accepts similar argument to limit it's output size.
+
+tftest.c:
+	An encryption and decryption speed test program.
+
+tfetest.c:
+	Version of tftest.c for TFE engine.
+
+genrconst.c:
+	A program to generate random Threefish round constants. Uses /dev/random as the initial
+	seed source, and current PRNG to generate random integers within the given range.
+
+tfsupport.h, mhexdump.c, numconv.c, xstrlcpy.c:
+	Support routines for formatted hex dumps, safe string copy, and human to numeric conversions.
+
+API OVERVIEW
+
+The main Threefish API and Modes API are organised in the "decomposed" way: the key, data blocks
+and counters/IVs are separate arguments, not unified into a "context" structure. Because Threefish
+does not precompute key (the key is accepted as is into cipher), there is no key conversion
+function into something that cannot be directly seen by user. It's easier and more obvious.
+
+The exceptions are those where using separate data fields is inappropriate or not convenient:
+Skein needs it's context structure to efficiently operate over multiple data blocks and not
+to load and store arguments to it's functions, so the TFE too. PRNG uses opaque data structure
+which user must allocate somewhere by querying for size first.
+
+There is no function to set the key. All keys are supplied as is. The tf_convkey() is currently
+to correct the endianness of key to be portable between various machines.
+
+Include tfdef.h to get the main encryption/decryption function prototypes, the Modes prototypes,
+and the endian independent single block function prototypes. This header file also defines useful
+macros and values to make your programs portable between various Threefish bit widths.
+
+Include skein.h to get Skein hash function main prototypes (init/update/final), as well as
+Skein context internals.
+
+Include tfe.h to get TFE related functions and definitions, and to work with TFE.
+
+Include tfprng.h to get PRNG function prototypes and definitions.
+
+Do not use tfsupport.h and tfcore.h. While tfcore.h is required for the Threefish code to
+build and run with your application, tfsupport.h and related code is unnecessary.
+tfcore.h defines Threefish internal mechanics, and should never be used by
+programs intended to be portable.
+
+The function names, macros and variable names are self explanatory.
+It should not be hard to get what they mean. The complete documentation is soon to be written.
+
+THREEFISH NOTES
+
+This implementation does not take into view that Threefish is a tweakable block cipher.
+It eliminates this property from it, turning it into an ordinary block cipher like AES, Twofish etc.
+The fact that XTS and OCB are tweakable block cipher modes of operation (although somewhat limited),
+was the primary reason to strip off this property from Threefish itself. Another one is the fact
+that the key size maybe safely extended from tweak as well as Threefish tweak is a part of key.
+This may turn paranoid to a related keys problem with most of ciphers.
+
+By turning tweak into key you get spare key bits: +256 bits, turning into TF256/512, TF512/768 and
+TF1024/1280, although not all of them are really key bits.
+
+This implementation leaves the choice up to you to use tweak or not: for TF256, the key layout is:
+K1 K2 K3 K4 K5 T0 T1 T2. Here, K5 T0 T1 T2 is a key extension.
+The TF_TWEAK_WORD1, TF_TWEAK_WORD2 and TF_TWEAK_WORD3 defines will point you at any time
+to the T0, T1 and T2 words inside key. K5 here is a XOR sum of K1-K4 in original
+Threefish plus THREEFISH_CONST. It is also used this way by Skein.
+Thus, you can increment this former tweak manually. Without that you're free to fill the whole
+key with YOUR private data and have a 512 bits of key security on a 256 bit block cipher.
+Or you may fill only K1-K4 and zero out the key extension and get the same flat 256/256 bits.
+I recommend you to use all Threefish key bits and use XTS or OCB mode of operation.
+Whatever the tweak is static or not, it is safe to reuse it as a part of key.
+
+SKEIN NOTES
+
+Skein MAC mode is not implemented here. Unlike my old "tf1024" implementation, this one just
+copies your key into Skein context without preprocessing.
+I believe it has is the same security, although resulting hashes will be different.
+To get the key for lengthy input, you should pass it through the unkeyed Skein.
+
+If you never used MAC feature of Skein, then you should get same hashes.
+This Skein successfully passes it's test vectors from the original skein1.3.pdf paper.
+
+The length of input MAC key is not +256 bits, but a length of the TF block. Skein uses
+tweak feature of Threefish, and sets K5 (K9, K16) to the XOR of all previous
+key words and THREEFISH_CONST. It is useless to fill the key extension with the user data,
+just to waste it then completely (Skein just overwrites these key words).
+
+DERIVED FROM
+
+The skeleton code came from my own Rys block cipher.
+The Rys block cipher currently deserves only this small note here about it's
+existence, because it had sparkled the development of this implementation.
+
+TODO
+
+Add comprehensive and easy to include test suite (test vectors and mode of operation samples).
+
+AUTHOR
+
+Andrey Rys <rys@lynxlynx.ru>, 2018.
+
+LICENSE
+
+This implementation of Threefish and Skein is, just like Threefish itself is put into public domain.
+Anyone can use and adapt this code to his own needs and modify it as he needs.
+There are no restrictions to use this code: you may use it freely for any purposes, both
+inside commercial and open source software.
+
+A special exception is here for OCB mode: it is currently a patented thing, but it's authors
+agreed that open source (incl. public domain) software may use the idea freely.
+
+If you concerned about OCB, you should use XTS. It is free and also included here.
+
+The supplying code (xstrlcpy.c, mhexdump.c, numconv.c) is my creation, hereby I place them
+into public domain too along with this code.
