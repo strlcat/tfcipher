@@ -92,13 +92,3 @@ TF_UNIT_TYPE tf_prng_range(TF_UNIT_TYPE s, TF_UNIT_TYPE d)
 {
 	return tf_prng_range_r(&tf_prng_sdata, s, d);
 }
-
-void tf_prng_srand(unsigned seed)
-{
-	tf_prng_seed((TF_UNIT_TYPE)seed);
-}
-
-int tf_prng_rand(void)
-{
-	return (int)tf_prng_range(0, (TF_UNIT_TYPE)TF_PRNG_LEGACY_RAND_MAX);
-}
