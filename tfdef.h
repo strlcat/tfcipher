@@ -87,31 +87,26 @@ static inline void data_to_words(void *p, size_t l)
 #endif
 }
 
-static inline void ctr_inc(TF_UNIT_TYPE *x, size_t l)
+static inline void ctr_inc(TF_UNIT_TYPE *x, size_t xl)
 {
-	size_t i;
+	size_t z;
 
-	for (i = 0; i < l; i++) {
-		x[i] = ((x[i] + (TF_UNIT_TYPE)1) & ((TF_UNIT_TYPE)~0));
-		if (x[i]) break;
+	for (z = 0; z < xl; z++) {
+		x[z] = ((x[z] + (TF_UNIT_TYPE)1) & ((TF_UNIT_TYPE)~0));
+		if (x[z]) break;
 	}
 }
 
-static inline void ctr_add(TF_UNIT_TYPE *x, const TF_UNIT_TYPE *y, size_t l)
+static inline void ctr_add(TF_UNIT_TYPE *x, size_t xl, const TF_UNIT_TYPE *y, size_t yl)
 {
-	size_t i, f = 0;
+	size_t z, cf;
 	TF_UNIT_TYPE t;
 
-	for (i = 0; i < l; i++) {
-		t = x[i];
-		x[i] += y[i]; x[i] &= ((TF_UNIT_TYPE)~0);
-		if (x[i] < t) {
-_again:			f++;
-			t = x[f-i];
-			x[f-i]++;
-			if (x[f-i] < t) goto _again;
-			else f = 0;
-		}
+	for (z = 0, cf = 0; z < xl; z++) {
+		t = x[z] + (z >= yl ? (TF_UNIT_TYPE)0 : y[z]) + cf;
+		if (cf) cf = (x[z] >= t ? 1 : 0);
+		else cf = (x[z] > t ? 1 : 0);
+		x[z] = t;
 	}
 }
 
