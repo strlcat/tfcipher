@@ -127,6 +127,8 @@ void tf_ecb_encrypt(const void *key, void *out, const void *in, size_t sz);
 void tf_ecb_decrypt(const void *key, void *out, const void *in, size_t sz);
 void tf_cbc_encrypt(const void *key, void *iv, void *out, const void *in, size_t sz);
 void tf_cbc_decrypt(const void *key, void *iv, void *out, const void *in, size_t sz);
+void tf_pcbc_encrypt(const void *key, void *iv, void *out, const void *in, size_t sz);
+void tf_pcbc_decrypt(const void *key, void *iv, void *out, const void *in, size_t sz);
 void tf_xts_encrypt(const void *keyx, const void *keyz, void *ctr, void *out, const void *in, size_t sz, size_t bpi);
 void tf_xts_decrypt(const void *keyx, const void *keyz, void *ctr, void *out, const void *in, size_t sz, size_t bpi);
 void tf_ocb_encrypt(const void *key, void *ctr, void *out, void *tag, const void *in, size_t sz, size_t bpi);
