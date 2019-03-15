@@ -19,7 +19,7 @@ void tf_prng_seedkey_r(void *sdata, const void *skey)
 	TF_UNIT_TYPE k[TF_NR_KEY_UNITS];
 	struct tf_prng_data *rprng = sdata;
 
-	memset(rprng, 0, sizeof(struct tf_prng_data));
+	memset(rprng, 0, tf_prng_datasize());
 	if (!skey) return;
 
 	memcpy(k, skey, TF_KEY_SIZE);
@@ -52,7 +52,7 @@ void tf_prng_seed_r(void *sdata, TF_UNIT_TYPE seed)
 	struct tf_prng_data *rprng = sdata;
 	size_t x;
 
-	memset(rprng, 0, sizeof(struct tf_prng_data));
+	memset(rprng, 0, tf_prng_datasize());
 	for (x = 0; x < TF_NR_KEY_UNITS; x++) k[x] = seed;
 	tfe_init(&rprng->tfe, k);
 	rprng->init = 1;
