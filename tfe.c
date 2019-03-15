@@ -6,11 +6,7 @@ void tfe_init_iv(struct tfe_stream *tfe, const void *key, const void *iv)
 {
 	memset(tfe, 0, sizeof(struct tfe_stream));
 	memcpy(tfe->key, key, TF_KEY_SIZE);
-	data_to_words(tfe->key, TF_KEY_SIZE);
-	if (iv) {
-		memcpy(tfe->iv, iv, TF_BLOCK_SIZE);
-		data_to_words(tfe->iv, TF_BLOCK_SIZE);
-	}
+	if (iv) memcpy(tfe->iv, iv, TF_BLOCK_SIZE);
 	tfe->carry_bytes = 0;
 }
 
