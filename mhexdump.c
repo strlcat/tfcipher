@@ -12,6 +12,18 @@
 #include <ctype.h>
 #include <stdint.h>
 
+#undef MACHINE_16BIT
+#undef MACHINE_32BIT
+#undef MACHINE_64BIT
+
+#if UINTPTR_MAX == UINT32_MAX
+#define MACHINE_32BIT
+#elif UINTPTR_MAX == UINT64_MAX
+#define MACHINE_64BIT
+#elif UINTPTR_MAX == UINT16_MAX
+#define MACHINE_16BIT
+#endif
+
 struct mhexdump_args {
 	const void *data;
 	size_t szdata;
@@ -24,12 +36,17 @@ struct mhexdump_args {
 	int closef;
 };
 
-#if SIZE_MAX == 0xffffffff
+#if defined(MACHINE_32BIT)
 #define ADDRFMT "%08x: "
 #define paddr (mha->addaddr == 2 ? (uint32_t)P+(x*mha->group) : (x*mha->group))
-#else
+#elif defined(MACHINE_64BIT)
 #define ADDRFMT "%016lx: "
 #define paddr (mha->addaddr == 2 ? (uint64_t)P+(x*mha->group) : (x*mha->group))
+#elif defined(MACHINE_16BIT)
+#define ADDRFMT "%04x: "
+#define paddr (mha->addaddr == 2 ? (uint16_t)P+(x*mha->group) : (x*mha->group))
+#else
+#error No machine word size detected!
 #endif
 
 #define BYTEOUT ((unsigned char)P[y+(x*mha->group)])
