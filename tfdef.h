@@ -59,6 +59,11 @@
 #define TF_BLOCK_SIZE (TF_SIZE_UNIT * TF_NR_BLOCK_UNITS)
 #define TF_KEY_SIZE (TF_SIZE_UNIT * TF_NR_KEY_UNITS)
 
+#define TF_NR_TWEAK_UNITS 2
+#define TF_NR_TWEAK_BITS 128
+#define TF_TWEAK_SIZE (TF_SIZE_UNIT * TF_NR_TWEAK_UNITS)
+#define TF_TWEAKEY_SIZE (TF_KEY_SIZE - (2 * TF_TWEAK_SIZE))
+#define TF_NR_TWEAKEY_BITS (TF_NR_KEY_BITS - (2 * TF_NR_TWEAK_BITS))
 #define TF_TWEAK_WORD1 (TF_NR_KEY_UNITS-3)
 #define TF_TWEAK_WORD2 (TF_NR_KEY_UNITS-2)
 #define TF_TWEAK_WORD3 (TF_NR_KEY_UNITS-1)
@@ -122,6 +127,10 @@ void tf_decrypt_block(const void *key, void *out, const void *in);
 
 void tf_ctr_set(void *ctr, const void *sctr, size_t sctrsz);
 void tf_ctr_crypt(const void *key, void *ctr, void *out, const void *in, size_t sz);
+
+void tf_tweak_set(void *key, const void *tweak);
+void tf_tweak_inc(void *key);
+
 void tf_stream_crypt(struct tfe_stream *tfe, void *out, const void *in, size_t sz);
 void tf_ecb_encrypt(const void *key, void *out, const void *in, size_t sz);
 void tf_ecb_decrypt(const void *key, void *out, const void *in, size_t sz);

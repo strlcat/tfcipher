@@ -1,4 +1,4 @@
-PROGS = tfcrypt skeinhash tftest tfrand tfblktst tferand tfecrypt tfetest genrconst
+PROGS = tfcrypt tftwcrypt skeinhash tftest tfrand tfblktst tferand tfecrypt tfetest genrconst
 SUPPORT = mhexdump.c xstrlcpy.c
 PROGSRCS = $(PROGS:=.c)
 PROGOBJS = $(PROGSRCS:.c=.o)

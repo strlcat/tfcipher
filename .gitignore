@@ -9,6 +9,7 @@ tags
 libtf.a
 libsupp.a
 tfcrypt
+tftwcrypt
 skeinhash
 tftest
 tfrand

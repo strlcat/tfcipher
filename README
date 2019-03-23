@@ -52,6 +52,9 @@ tfctr.c:
 tfctrapi.c:
 	Counter adjustment for CTR and CTR capable modes of operation.
 
+tftweakapi.c:
+	Tweak adjustment in a portable way (no direct key words manipulation).
+
 tfecb.c:
 	ECB mode of operation.
 
@@ -179,21 +182,19 @@ It eliminates this property from it, turning it into an ordinary block cipher li
 The fact that XTS and OCB are tweakable block cipher modes of operation (although somewhat limited),
 was the primary reason to strip off this property from Threefish itself. Another one is the fact
 that the key size maybe safely extended from tweak as well as Threefish tweak is a part of key.
-This may turn paranoid to a related keys problem with most of ciphers.
 
 By turning tweak into key you get spare key bits: +256 bits, turning into TF256/512, TF512/768 and
-TF1024/1280, although not all of them are really key bits.
+TF1024/1280, although not all of them are really key bits - they are summed internally.
 
 This implementation leaves the choice up to you to use tweak or not: for TF256, the key layout is:
 K1 K2 K3 K4 K5 T0 T1 T2. Here, K5 T0 T1 T2 is a key extension.
 The TF_TWEAK_WORD1, TF_TWEAK_WORD2 and TF_TWEAK_WORD3 defines will point you at any time
 to the T0, T1 and T2 words inside key. K5 here is a XOR sum of K1-K4 in original
 Threefish plus THREEFISH_CONST. It is also used this way by Skein.
-Thus, you can increment this former tweak manually. Without that you're free to fill the whole
-key with YOUR private data and have a 512 bits of key security on a 256 bit block cipher.
-Or you may fill only K1-K4 and zero out the key extension and get the same flat 256/256 bits.
-I recommend you to use all Threefish key bits and use XTS or OCB mode of operation.
-Whatever the tweak is static or not, it is safe to reuse it as a part of key.
+
+Functions in tftweakapi.c will aid you in setting and adjusting tweak for your own modes.
+You should use them instead of direct tweak word manipulation, as they also take care about
+setting it per official specification, and they do endianness conversion.
 
 SKEIN NOTES
 
