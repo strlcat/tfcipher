@@ -85,7 +85,7 @@ TF_UNIT_TYPE tf_prng_range_r(void *sdata, TF_UNIT_TYPE s, TF_UNIT_TYPE d)
 {
 	TF_UNIT_TYPE c = tf_prng_random_r(sdata);
 	if (d <= s) return s;
-	return s + c / ((TF_UNIT_TYPE)~0 / (d - s + 1) + 1);
+	return TF_PRNG_RANGE(c, TF_UNIT_TYPE, s, d);
 }
 
 TF_UNIT_TYPE tf_prng_range(TF_UNIT_TYPE s, TF_UNIT_TYPE d)

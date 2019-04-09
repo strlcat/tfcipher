@@ -6,6 +6,7 @@
 
 #define TF_PRNG_KEY_SIZE TF_KEY_SIZE
 #define TF_PRNG_SIZE_UNIT TF_SIZE_UNIT
+#define TF_PRNG_RANGE(C, T, S, D) (S + C / ((T)~0 / (D - S + 1) + 1))
 
 size_t tf_prng_datasize(void);
 void tf_prng_seedkey_r(void *sdata, const void *skey);
