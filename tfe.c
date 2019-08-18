@@ -49,9 +49,13 @@ void tfe_emit(void *dst, size_t szdst, struct tfe_stream *tfe)
 	}
 
 	if (sz) {
+		TF_UNIT_TYPE t[TF_NR_BLOCK_UNITS];
+
 		tf_encrypt_rawblk(tfe->iv, tfe->iv, tfe->key);
-		memcpy(udst, tfe->iv, sz);
-		data_to_words(udst, TF_BLOCK_SIZE);
+		memcpy(t, tfe->iv, TF_BLOCK_SIZE);
+		data_to_words(t, TF_BLOCK_SIZE);
+		memcpy(udst, t, sz);
+		memset(t, 0, TF_BLOCK_SIZE);
 		udst = (TF_BYTE_TYPE *)tfe->iv;
 		tfe->carry_bytes = TF_BLOCK_SIZE-sz;
 		memcpy(tfe->carry_block, udst+sz, tfe->carry_bytes);
