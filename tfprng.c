@@ -17,7 +17,7 @@ size_t tf_prng_datasize(void)
 void tf_prng_seedkey_r(void *sdata, const void *skey)
 {
 	TF_UNIT_TYPE k[TF_NR_KEY_UNITS];
-	struct tf_prng_data *rprng = sdata;
+	struct tf_prng_data *rprng = (struct tf_prng_data *)sdata;
 
 	memset(rprng, 0, tf_prng_datasize());
 	if (!skey) return;
@@ -36,7 +36,7 @@ void tf_prng_seedkey(const void *skey)
 
 void tf_prng_genrandom_r(void *sdata, void *result, size_t need)
 {
-	struct tf_prng_data *rprng = sdata;
+	struct tf_prng_data *rprng = (struct tf_prng_data *)sdata;
 	memset(result, 0, need);
 	tfe_emit(result, need, &rprng->tfe);
 }
@@ -49,7 +49,7 @@ void tf_prng_genrandom(void *result, size_t need)
 void tf_prng_seed_r(void *sdata, TF_UNIT_TYPE seed)
 {
 	TF_UNIT_TYPE k[TF_NR_KEY_UNITS];
-	struct tf_prng_data *rprng = sdata;
+	struct tf_prng_data *rprng = (struct tf_prng_data *)sdata;
 	size_t x;
 
 	memset(rprng, 0, tf_prng_datasize());
@@ -67,7 +67,7 @@ void tf_prng_seed(TF_UNIT_TYPE seed)
 
 TF_UNIT_TYPE tf_prng_random_r(void *sdata)
 {
-	struct tf_prng_data *rprng = sdata;
+	struct tf_prng_data *rprng = (struct tf_prng_data *)sdata;
 	TF_UNIT_TYPE r;
 
 	if (!rprng->init) return 0;

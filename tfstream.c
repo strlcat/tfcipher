@@ -4,10 +4,10 @@
 
 void tf_stream_crypt(struct tfe_stream *tfe, void *out, const void *in, size_t sz)
 {
-	const TF_UNIT_TYPE *uin = in;
-	TF_UNIT_TYPE *uout = out;
-	const TF_BYTE_TYPE *uuin = in;
-	TF_BYTE_TYPE *uuout = out;
+	const TF_UNIT_TYPE *uin = (const TF_UNIT_TYPE *)in;
+	TF_UNIT_TYPE *uout = (TF_UNIT_TYPE *)out;
+	const TF_BYTE_TYPE *uuin = (const TF_BYTE_TYPE *)in;
+	TF_BYTE_TYPE *uuout = (TF_BYTE_TYPE *)out;
 	size_t n, z, x;
 
 	switch (TF_SIZE_UNIT) {

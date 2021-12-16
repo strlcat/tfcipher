@@ -53,7 +53,7 @@ struct mhexdump_args {
 
 int fmhexdump(const struct mhexdump_args *mha)
 {
-	const unsigned char *P = mha->data;
+	const unsigned char *P = (const unsigned char *)mha->data;
 	int x, y;
 
 	if (!mha->fp || !mha->data || mha->szdata == 0) return 0;

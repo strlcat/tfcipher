@@ -3,10 +3,10 @@
 
 void tf_ecb_encrypt(const void *key, void *out, const void *in, size_t sz)
 {
-	const TF_BYTE_TYPE *uin = in;
-	TF_BYTE_TYPE *uout = out;
+	const TF_BYTE_TYPE *uin = (const TF_BYTE_TYPE *)in;
+	TF_BYTE_TYPE *uout = (TF_BYTE_TYPE *)out;
 	TF_UNIT_TYPE x[TF_NR_BLOCK_UNITS], y[TF_NR_BLOCK_UNITS];
-	const TF_UNIT_TYPE *ukey = key;
+	const TF_UNIT_TYPE *ukey = (const TF_UNIT_TYPE *)key;
 	size_t sl = sz, i;
 
 	if (sl >= TF_BLOCK_SIZE) {
@@ -42,10 +42,10 @@ void tf_ecb_encrypt(const void *key, void *out, const void *in, size_t sz)
 
 void tf_ecb_decrypt(const void *key, void *out, const void *in, size_t sz)
 {
-	const TF_BYTE_TYPE *uin = in;
-	TF_BYTE_TYPE *uout = out;
+	const TF_BYTE_TYPE *uin = (const TF_BYTE_TYPE *)in;
+	TF_BYTE_TYPE *uout = (TF_BYTE_TYPE *)out;
 	TF_UNIT_TYPE x[TF_NR_BLOCK_UNITS], y[TF_NR_BLOCK_UNITS];
-	const TF_UNIT_TYPE *ukey = key;
+	const TF_UNIT_TYPE *ukey = (const TF_UNIT_TYPE *)key;
 	size_t sl = sz, i;
 
 	if (sl >= TF_BLOCK_SIZE) {

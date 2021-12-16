@@ -9,6 +9,10 @@
 #define _BSD_SOURCE
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* config block */
 #define TF_256BITS
 /* #define TF_512BITS */
@@ -82,7 +86,7 @@ static inline void data_to_words(void *p, size_t l)
 {
 #ifndef TF_NO_ENDIAN
 	size_t idx;
-	TF_UNIT_TYPE *P = p;
+	TF_UNIT_TYPE *P = (TF_UNIT_TYPE *)p;
 	TF_UNIT_TYPE t;
 
 	for (idx = 0; idx < (l/sizeof(TF_UNIT_TYPE)); idx++) {
@@ -142,5 +146,10 @@ void tf_xts_encrypt(const void *keyx, const void *keyz, void *ctr, void *out, co
 void tf_xts_decrypt(const void *keyx, const void *keyz, void *ctr, void *out, const void *in, size_t sz, size_t bpi);
 void tf_ocb_encrypt(const void *key, void *ctr, void *out, void *tag, const void *in, size_t sz, size_t bpi);
 void tf_ocb_decrypt(const void *key, void *ctr, void *out, void *tag, const void *in, size_t sz, size_t bpi);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

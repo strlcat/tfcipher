@@ -42,6 +42,10 @@
 
 #define THREEFISH_CONST 0x1bd11bdaa9fc1a22ULL
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #if defined(TF_256BITS)
 enum tf_rotations {
 	TFS_KS01 = 14, TFS_KS02 = 16, TFS_KS03 = 25, TFS_KS04 = 33,
@@ -81,6 +85,11 @@ enum tf_rotations {
 };
 #else
 #error No cipher was defined! Aborting build.
+#endif
+
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

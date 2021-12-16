@@ -19,12 +19,12 @@ _tag:	for (i = 0; i < TF_NR_BLOCK_UNITS-1; i++)
 
 static void ocb_encrypt(const void *key, void *ctr, void *out, void *tag, const void *in, size_t sz)
 {
-	const TF_BYTE_TYPE *uin = in;
-	TF_BYTE_TYPE *uout = out, *s, *d;
+	const TF_BYTE_TYPE *uin = (const TF_BYTE_TYPE *)in;
+	TF_BYTE_TYPE *uout = (TF_BYTE_TYPE *)out, *s, *d;
 	TF_UNIT_TYPE x[TF_NR_BLOCK_UNITS], y[TF_NR_BLOCK_UNITS];
 	TF_UNIT_TYPE tctr[TF_NR_BLOCK_UNITS], c[TF_NR_BLOCK_UNITS];
-	TF_UNIT_TYPE *uctr = ctr, *utag = tag;
-	const TF_UNIT_TYPE *ukey = key;
+	TF_UNIT_TYPE *uctr = (TF_UNIT_TYPE *)ctr, *utag = (TF_UNIT_TYPE *)tag;
+	const TF_UNIT_TYPE *ukey = (const TF_UNIT_TYPE *)key;
 	size_t sl = sz, i;
 
 	tf_encrypt_rawblk(tctr, uctr, ukey);
@@ -87,8 +87,8 @@ _done:	memset(tctr, 0, TF_BLOCK_SIZE);
 
 void tf_ocb_encrypt(const void *key, void *ctr, void *out, void *tag, const void *in, size_t sz, size_t bpi)
 {
-	const TF_BYTE_TYPE *uin = in;
-	TF_BYTE_TYPE *uout = out;
+	const TF_BYTE_TYPE *uin = (const TF_BYTE_TYPE *)in;
+	TF_BYTE_TYPE *uout = (TF_BYTE_TYPE *)out;
 	size_t sl = sz, sx = TF_BLOCKS_TO_BYTES(bpi);
 
 	if (sl >= sx) {
@@ -104,12 +104,12 @@ void tf_ocb_encrypt(const void *key, void *ctr, void *out, void *tag, const void
 
 static void ocb_decrypt(const void *key, void *ctr, void *out, void *tag, const void *in, size_t sz)
 {
-	const TF_BYTE_TYPE *uin = in;
-	TF_BYTE_TYPE *uout = out;
+	const TF_BYTE_TYPE *uin = (const TF_BYTE_TYPE *)in;
+	TF_BYTE_TYPE *uout = (TF_BYTE_TYPE *)out;
 	TF_UNIT_TYPE x[TF_NR_BLOCK_UNITS], y[TF_NR_BLOCK_UNITS];
 	TF_UNIT_TYPE tctr[TF_NR_BLOCK_UNITS], c[TF_NR_BLOCK_UNITS];
-	TF_UNIT_TYPE *uctr = ctr, *utag = tag;
-	const TF_UNIT_TYPE *ukey = key;
+	TF_UNIT_TYPE *uctr = (TF_UNIT_TYPE *)ctr, *utag = (TF_UNIT_TYPE *)tag;
+	const TF_UNIT_TYPE *ukey = (const TF_UNIT_TYPE *)key;
 	size_t sl = sz, i;
 
 	tf_encrypt_rawblk(tctr, uctr, ukey);
@@ -171,8 +171,8 @@ _done:	memset(tctr, 0, TF_BLOCK_SIZE);
 
 void tf_ocb_decrypt(const void *key, void *ctr, void *out, void *tag, const void *in, size_t sz, size_t bpi)
 {
-	const TF_BYTE_TYPE *uin = in;
-	TF_BYTE_TYPE *uout = out;
+	const TF_BYTE_TYPE *uin = (const TF_BYTE_TYPE *)in;
+	TF_BYTE_TYPE *uout = (TF_BYTE_TYPE *)out;
 	size_t sl = sz, sx = TF_BLOCKS_TO_BYTES(bpi);
 
 	if (sl >= sx) {
