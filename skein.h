@@ -14,6 +14,11 @@
 
 #define SKEIN_DIGEST_SIZE TF_BLOCK_SIZE
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct skein {
 	TF_UNIT_TYPE key[TF_NR_KEY_UNITS];
 	TF_BYTE_TYPE carry_block[TF_BLOCK_SIZE];
@@ -25,5 +30,9 @@ void skein_init_key(struct skein *sk, const void *ukey, size_t bits);
 void skein_init(struct skein *sk, size_t bits);
 void skein_update(struct skein *sk, const void *msg, size_t msgsz);
 void skein_final(void *result, struct skein *sk);
+
+#ifdef __cplusplus
+  }
+#endif
 
 #endif

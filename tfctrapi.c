@@ -4,7 +4,7 @@
 void tf_ctr_set(void *ctr, const void *sctr, size_t sctrsz)
 {
 	TF_UNIT_TYPE usctr[TF_NR_BLOCK_UNITS];
-	TF_UNIT_TYPE *uctr = ctr;
+	TF_UNIT_TYPE *uctr = (TF_UNIT_TYPE *)ctr;
 
 	data_to_words(uctr, TF_BLOCK_SIZE);
 

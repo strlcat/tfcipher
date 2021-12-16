@@ -67,7 +67,7 @@ void skein_init(struct skein *sk, size_t bits)
 
 void skein_update(struct skein *sk, const void *msg, size_t msgsz)
 {
-	const TF_BYTE_TYPE *umsg = msg;
+	const TF_BYTE_TYPE *umsg = (TF_BYTE_TYPE *)msg;
 	size_t n;
 
 	if (msgsz + sk->carry_bytes > TF_BLOCK_SIZE) {
@@ -99,7 +99,7 @@ void skein_update(struct skein *sk, const void *msg, size_t msgsz)
 
 void skein_final(void *result, struct skein *sk)
 {
-	TF_BYTE_TYPE *uresult = result;
+	TF_BYTE_TYPE *uresult = (TF_BYTE_TYPE *)result;
 	TF_UNIT_TYPE key[TF_NR_BLOCK_UNITS], *X;
 	size_t i, b, n;
 

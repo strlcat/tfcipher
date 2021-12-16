@@ -3,11 +3,11 @@
 
 void tf_cbc_encrypt(const void *key, void *iv, void *out, const void *in, size_t sz)
 {
-	const TF_BYTE_TYPE *uin = in;
-	TF_BYTE_TYPE *uout = out;
+	const TF_BYTE_TYPE *uin = (TF_BYTE_TYPE *)in;
+	TF_BYTE_TYPE *uout = (TF_BYTE_TYPE *)out;
 	TF_UNIT_TYPE x[TF_NR_BLOCK_UNITS], y[TF_NR_BLOCK_UNITS];
-	TF_UNIT_TYPE *uiv = iv;
-	const TF_UNIT_TYPE *ukey = key;
+	TF_UNIT_TYPE *uiv = (TF_UNIT_TYPE *)iv;
+	const TF_UNIT_TYPE *ukey = (TF_UNIT_TYPE *)key;
 	size_t sl = sz, i;
 
 	if (sl >= TF_BLOCK_SIZE) {
@@ -45,11 +45,11 @@ void tf_cbc_encrypt(const void *key, void *iv, void *out, const void *in, size_t
 
 void tf_cbc_decrypt(const void *key, void *iv, void *out, const void *in, size_t sz)
 {
-	const TF_BYTE_TYPE *uin = in;
-	TF_BYTE_TYPE *uout = out;
+	const TF_BYTE_TYPE *uin = (TF_BYTE_TYPE *)in;
+	TF_BYTE_TYPE *uout = (TF_BYTE_TYPE *)out;
 	TF_UNIT_TYPE x[TF_NR_BLOCK_UNITS], y[TF_NR_BLOCK_UNITS], t[TF_NR_BLOCK_UNITS];
-	TF_UNIT_TYPE *uiv = iv;
-	const TF_UNIT_TYPE *ukey = key;
+	TF_UNIT_TYPE *uiv = (TF_UNIT_TYPE *)iv;
+	const TF_UNIT_TYPE *ukey = (TF_UNIT_TYPE *)key;
 	size_t sl = sz, i;
 
 	if (sl >= TF_BLOCK_SIZE) {

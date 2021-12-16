@@ -1,5 +1,9 @@
 #include <string.h>
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
 size_t xstrlcpy(char *dst, const char *src, size_t size)
 {
 	size_t len, srclen;
@@ -10,3 +14,7 @@ size_t xstrlcpy(char *dst, const char *src, size_t size)
 	dst[len] = '\0';
 	return srclen;
 }
+
+#ifdef __cplusplus
+  }
+#endif

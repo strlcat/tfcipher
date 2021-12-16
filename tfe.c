@@ -17,7 +17,7 @@ void tfe_init(struct tfe_stream *tfe, const void *key)
 
 void tfe_emit(void *dst, size_t szdst, struct tfe_stream *tfe)
 {
-	TF_BYTE_TYPE *udst = dst;
+	TF_BYTE_TYPE *udst = (TF_BYTE_TYPE *)dst;
 	size_t sz = szdst;
 
 	if (!dst && szdst == 0) {
