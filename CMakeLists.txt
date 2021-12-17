@@ -13,7 +13,23 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
-set(MY_INCLUDE_HEADERS tfdef.h skein.h tfe.h tfprng.h)
+if(TF_1024BITS)
+  set(MY_INC tf_1024)
+elseif(TF_512)
+  set(MY_INC tf_512)
+elseif(TF_256)
+  set(MY_INC tf_256)
+elseif(TF_BIG_ENDIAN)
+  set(MY_INC tf_big_endian)
+elseif(TF_NO_ENDIAN)
+  set(MY_INC tf_no_endian)
+else()
+  set(MY_INC tf_256)
+endif()
+
+file(COPY ${MY_INC}/tf_bits.h DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
+
+set(MY_INCLUDE tf_bits.h tfdef.h skein.h tfe.h tfprng.h)
 
 set(MY_MAIN_SRC tfe.c tfprng.c tfblk.c tfctrapi.c tfecb.c tftweakapi.c
                 numconv.c tfctr.c tfocb.c tfstream.c tfxts.c skein.c tfcbc.c

@@ -10,11 +10,13 @@
 #endif
 
 /* config block */
-#define TF_256BITS
+/* #define TF_256BITS */
 /* #define TF_512BITS */
 /* #define TF_1024BITS */
 /* #define TF_NO_ENDIAN */
 /* #define TF_BIG_ENDIAN */
+
+#include "tf_bits.h"
 
 #include <stddef.h>
 #include <stdint.h>
