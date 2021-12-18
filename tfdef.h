@@ -149,7 +149,7 @@ void tf_ocb_decrypt(const void *key, void *ctr, void *out, void *tag, const void
 
 
 #ifdef __cplusplus
-  }
+}
 #endif
 
 #endif

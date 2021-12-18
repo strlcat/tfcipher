@@ -24,10 +24,6 @@
 #define MACHINE_16BIT
 #endif
 
-#ifdef __cplusplus
-  extern "C" {
-#endif
-
 struct mhexdump_args {
 	const void *data;
 	size_t szdata;
@@ -123,7 +119,3 @@ int mhexdump(const void *data, size_t szdata, int hgroup)
 
 	return fmhexdump(&mha);
 }
-
-#ifdef __cplusplus
-  }
-#endif

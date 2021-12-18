@@ -4,7 +4,7 @@
 #include "tfdef.h"
 
 #ifdef __cplusplus
-  extern "C" {
+extern "C" {
 #endif
 
 struct tfe_stream {
@@ -19,7 +19,7 @@ void tfe_init_iv(struct tfe_stream *tfe, const void *key, const void *iv);
 void tfe_emit(void *dst, size_t szdst, struct tfe_stream *tfe);
 
 #ifdef __cplusplus
-  }
+}
 #endif
 
 #endif

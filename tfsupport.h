@@ -17,7 +17,7 @@ typedef void (*sighandler_t)(int);
 #define HD_WIDTH 32
 
 #ifdef __cplusplus
-  extern "C" {
+extern "C" {
 #endif
 
 #define newline() do { putc('\n', stdout); } while (0)
@@ -28,7 +28,7 @@ size_t blk_len_adjust(tf_fsize filelen, tf_fsize read_already, size_t blklen);
 tf_fsize tf_humanfsize(const char *s, char **stoi);
 
 #ifdef __cplusplus
-  }
+}
 #endif
 
 #endif

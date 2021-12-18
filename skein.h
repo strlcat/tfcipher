@@ -32,7 +32,7 @@ void skein_update(struct skein *sk, const void *msg, size_t msgsz);
 void skein_final(void *result, struct skein *sk);
 
 #ifdef __cplusplus
-  }
+}
 #endif
 
 #endif

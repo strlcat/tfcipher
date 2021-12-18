@@ -43,7 +43,7 @@
 #define THREEFISH_CONST 0x1bd11bdaa9fc1a22ULL
 
 #ifdef __cplusplus
-  extern "C" {
+extern "C" {
 #endif
 
 #if defined(TF_256BITS)

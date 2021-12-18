@@ -9,7 +9,7 @@
 #define TF_PRNG_RANGE(C, T, S, D) (S + C / ((T)~0 / (D - S + 1) + 1))
 
 #ifdef __cplusplus
-  extern "C" {
+extern "C" {
 #endif
 
 size_t tf_prng_datasize(void);
@@ -25,7 +25,7 @@ TF_UNIT_TYPE tf_prng_range_r(void *sdata, TF_UNIT_TYPE s, TF_UNIT_TYPE d);
 TF_UNIT_TYPE tf_prng_range(TF_UNIT_TYPE s, TF_UNIT_TYPE d);
 
 #ifdef __cplusplus
-  }
+}
 #endif
 
 #endif
