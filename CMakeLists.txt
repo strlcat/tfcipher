@@ -29,7 +29,7 @@ endif()
 
 file(COPY ${MY_INC}/tf_bits.h DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
 
-set(MY_INCLUDE tf_bits.h tfdef.h skein.h tfe.h tfprng.h)
+set(MY_INCLUDE_HEADERS tf_bits.h tfdef.h skein.h tfe.h tfprng.h)
 
 set(MY_MAIN_SRC tfe.c tfprng.c tfblk.c tfctrapi.c tfecb.c tftweakapi.c
                 numconv.c tfctr.c tfocb.c tfstream.c tfxts.c skein.c tfcbc.c
