@@ -16,11 +16,19 @@ typedef void (*sighandler_t)(int);
 
 #define HD_WIDTH 32
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
 #define newline() do { putc('\n', stdout); } while (0)
 size_t xstrlcpy(char *dst, const char *src, size_t size);
 #define xzstrlcpy(d, s, sz) do { memset(d, 0, sz); xstrlcpy(d, s, sz); } while(0)
 int mhexdump(const void *data, size_t szdata, int hgroup);
 size_t blk_len_adjust(tf_fsize filelen, tf_fsize read_already, size_t blklen);
 tf_fsize tf_humanfsize(const char *s, char **stoi);
+
+#ifdef __cplusplus
+  }
+#endif
 
 #endif

@@ -4,7 +4,7 @@
 
 void tf_tweak_set(void *key, const void *tweak)
 {
-	TF_UNIT_TYPE *ukey = key;
+	TF_UNIT_TYPE *ukey = (TF_UNIT_TYPE *)key;
 	TF_UNIT_TYPE *twe = ukey+TF_TWEAK_WORD1;
 	TF_UNIT_TYPE c = THREEFISH_CONST;
 	size_t x;
