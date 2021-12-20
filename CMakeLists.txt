@@ -25,14 +25,20 @@ set(CMAKE_C_FLAGS "-Wall -Wextra -Wshadow -Wundef -march=native -mtune=native")
 set(CMAKE_C_FLAGS_DEBUG "-g -O0")
 set(CMAKE_C_FLAGS_RELEASE "-O3")
 
-add_library(threefish SHARED ${MY_MAIN_SRC} ${MY_INCLUDE_HEADERS})
-set_target_properties(threefish PROPERTIES
+add_library(threefish STATIC ${MY_MAIN_SRC} ${MY_INCLUDE_HEADERS})
+target_include_directories(threefish PRIVATE . )
+
+add_library(threefish_supp STATIC ${MY_SUPPORT_SRC})
+target_include_directories(threefish_supp PRIVATE . )
+
+add_library(threefish_shared SHARED ${MY_MAIN_SRC} ${MY_INCLUDE_HEADERS})
+set_target_properties(threefish_shared PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION 1)
 target_include_directories(threefish PRIVATE . )
 
-add_library(threefish_supp SHARED ${MY_SUPPORT_SRC})
-set_target_properties(threefish_supp PROPERTIES
+add_library(threefish_supp_shared SHARED ${MY_SUPPORT_SRC})
+set_target_properties(threefish_supp_shared PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION 1)
 target_include_directories(threefish_supp PRIVATE . )
@@ -73,8 +79,8 @@ endif()
 
 include(GNUInstallDirs)
 
-install(TARGETS threefish threefish_supp
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/tfcipher/
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/tfcipher/
+install(TARGETS threefish threefish_supp threefish_shared threefish_supp_shared
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 install(FILES ${MY_INCLUDE_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/tfcipher/ )
