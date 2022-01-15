@@ -2,21 +2,20 @@
 #include "tfdef.h"
 #include "tfe.h"
 
+static inline void xor_block(void *dst, const void *src, size_t sz)
+{
+	const size_t *sx = (const size_t *)src;
+	const TF_BYTE_TYPE *usx = (const TF_BYTE_TYPE *)src;
+	size_t *dx = (size_t *)dst;
+	TF_BYTE_TYPE *udx = (TF_BYTE_TYPE *)dst;
+	size_t sl = sz;
+
+	for (sl = 0; sl < (sz / sizeof(size_t)); sl++) dx[sl] ^= sx[sl];
+	if (sz - (sl * sizeof(size_t))) for (sl *= sizeof(size_t); sl < sz; sl++) udx[sl] ^= usx[sl];
+}
+
 void tf_stream_crypt(struct tfe_stream *tfe, void *out, const void *in, size_t sz)
 {
-	const TF_UNIT_TYPE *uin = (const TF_UNIT_TYPE *)in;
-	TF_UNIT_TYPE *uout = (TF_UNIT_TYPE *)out;
-	const TF_BYTE_TYPE *uuin = (const TF_BYTE_TYPE *)in;
-	TF_BYTE_TYPE *uuout = (TF_BYTE_TYPE *)out;
-	size_t n, z, x;
-
-	switch (TF_SIZE_UNIT) {
-		case 2: n = 1; break;
-		case 4: n = 2; break;
-		case 8: n = 3; break;
-	}
-
 	tfe_emit(out, sz, tfe);
-	for (z = 0; z < (sz >> n); z++) uout[z] ^= uin[z];
-	if (sz - (z << n)) for (x = (z << n); x < sz; x++) uuout[x] ^= uuin[x];
+	xor_block(out, in, sz);
 }
