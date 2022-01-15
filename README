@@ -10,7 +10,7 @@ It supports all bit widths that are defined by Threefish: 256, 512 and 1024 bits
 It is endian independent, this means that it can work on both big and little
 endian machines equally.
 
-The implementation also includes code for operating Threefish in CTR, ECB, CBC, XTS and OCB
+The implementation also includes code for operating Threefish in CTR, ECB, CBC and XTS
 modes of operation, as well as OFB like STREAM mode API which turns it into stream cipher.
 There is also Threefish based PRNG, CTR modes API to ease adjusting counter and some test programs.
 
@@ -65,9 +65,6 @@ tfxts.c:
 	XTS (XEX with cipher text stealing) mode of operation, which is adjusted to
 	256, 512 and 1024 bits block size (see IRR_POLY_CONST define).
 	This implementation takes two keys: one encryption key and one XTS key.
-
-tfocb.c:
-	Philip's Rogaway OCB mode of operation adapted for Threefish.
 
 tfe.h, tfe.c:
 	TFE is a Threefish keystream generator. While CTR mode turns block cipher
@@ -179,7 +176,7 @@ THREEFISH NOTES
 
 This implementation does not take into view that Threefish is a tweakable block cipher.
 It eliminates this property from it, turning it into an ordinary block cipher like AES, Twofish etc.
-The fact that XTS and OCB are tweakable block cipher modes of operation (although somewhat limited),
+The fact that XTS is tweakable block cipher mode of operation (although somewhat limited),
 was the primary reason to strip off this property from Threefish itself. Another one is the fact
 that the key size maybe safely extended from tweak as well as Threefish tweak is a part of key.
 
@@ -229,11 +226,6 @@ This implementation of Threefish and Skein is, just like Threefish itself is put
 Anyone can use and adapt this code to his own needs and modify it as he needs.
 There are no restrictions to use this code: you may use it freely for any purposes, both
 inside commercial and open source software.
-
-A special exception is here for OCB mode: it is currently a patented thing, but it's authors
-agreed that open source (incl. public domain) software may use the idea freely.
-
-If you concerned about OCB, you should use XTS. It is free and also included here.
 
 The supplying code (xstrlcpy.c, mhexdump.c, numconv.c) is my creation, hereby I place them
 into public domain too along with this code.
