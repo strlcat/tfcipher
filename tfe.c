@@ -6,8 +6,9 @@ void tfe_init_iv(struct tfe_stream *tfe, const void *key, const void *iv)
 {
 	memset(tfe, 0, sizeof(struct tfe_stream));
 	memcpy(tfe->key, key, TF_KEY_SIZE);
+	data_to_words(tfe->key, TF_KEY_SIZE);
 	if (iv) memcpy(tfe->iv, iv, TF_BLOCK_SIZE);
-	tfe->carry_bytes = 0;
+	tfe->tidx = 0;
 }
 
 void tfe_init(struct tfe_stream *tfe, const void *key)
@@ -17,26 +18,28 @@ void tfe_init(struct tfe_stream *tfe, const void *key)
 
 void tfe_emit(void *dst, size_t szdst, struct tfe_stream *tfe)
 {
-	TF_BYTE_TYPE *udst = (TF_BYTE_TYPE *)dst;
-	size_t sz = szdst;
+	TF_BYTE_TYPE *udst = dst;
+	size_t sz = szdst, trem;
 
 	if (!dst && szdst == 0) {
 		memset(tfe, 0, sizeof(struct tfe_stream));
 		return;
 	}
 
-	if (tfe->carry_bytes > 0) {
-		if (tfe->carry_bytes > szdst) {
-			memcpy(udst, tfe->carry_block, szdst);
-			memmove(tfe->carry_block, tfe->carry_block+szdst, tfe->carry_bytes-szdst);
-			tfe->carry_bytes -= szdst;
+	if (tfe->tidx > 0) {
+		trem = TF_BLOCK_SIZE-tfe->tidx;
+
+		if (szdst <= trem) {
+			memcpy(udst, &tfe->tmp[tfe->tidx], szdst);
+			tfe->tidx += szdst;
+			if (tfe->tidx >= TF_BLOCK_SIZE) tfe->tidx = 0;
 			return;
 		}
 
-		memcpy(udst, tfe->carry_block, tfe->carry_bytes);
-		udst += tfe->carry_bytes;
-		sz -= tfe->carry_bytes;
-		tfe->carry_bytes = 0;
+		memcpy(udst, &tfe->tmp[tfe->tidx], trem);
+		udst += trem;
+		sz -= trem;
+		tfe->tidx = 0;
 	}
 
 	if (sz >= TF_BLOCK_SIZE) {
@@ -49,15 +52,10 @@ void tfe_emit(void *dst, size_t szdst, struct tfe_stream *tfe)
 	}
 
 	if (sz) {
-		TF_UNIT_TYPE t[TF_NR_BLOCK_UNITS];
-
 		tf_encrypt_rawblk(tfe->iv, tfe->iv, tfe->key);
-		memcpy(t, tfe->iv, TF_BLOCK_SIZE);
-		data_to_words(t, TF_BLOCK_SIZE);
-		memcpy(udst, t, sz);
-		memset(t, 0, TF_BLOCK_SIZE);
-		udst = (TF_BYTE_TYPE *)tfe->iv;
-		tfe->carry_bytes = TF_BLOCK_SIZE-sz;
-		memcpy(tfe->carry_block, udst+sz, tfe->carry_bytes);
+		memcpy(tfe->tmp, tfe->iv, TF_BLOCK_SIZE);
+		data_to_words(tfe->tmp, TF_BLOCK_SIZE);
+		memcpy(udst, tfe->tmp, sz);
+		tfe->tidx = sz;
 	}
 }

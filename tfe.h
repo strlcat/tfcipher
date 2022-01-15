@@ -10,8 +10,8 @@ extern "C" {
 struct tfe_stream {
 	TF_UNIT_TYPE key[TF_NR_KEY_UNITS];
 	TF_UNIT_TYPE iv[TF_NR_BLOCK_UNITS];
-	TF_BYTE_TYPE carry_block[TF_BLOCK_SIZE];
-	size_t carry_bytes;
+	TF_BYTE_TYPE tmp[TF_BLOCK_SIZE];
+	size_t tidx;
 };
 
 void tfe_init(struct tfe_stream *tfe, const void *key);
